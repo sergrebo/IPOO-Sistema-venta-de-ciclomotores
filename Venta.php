@@ -2,15 +2,15 @@
 class Venta{
     private $numero;
     private $fecha;
-    private $refCliente;
-    private $refArrayMotos;
+    private $objCliente;
+    private $ArrayMotos;
     private $precioFinal;
 
-    public function __construct($num, $fecha, $refCliente, $refColMotos, $precio){
+    public function __construct($num, $fecha, $objCliente, $colMotos, $precio){
         $this->numero=$num;
         $this->fecha=$fecha;
-        $this->refCliente=$refCliente;
-        $this->refArrayMotos=$refColMotos;
+        $this->objCliente=$objCliente;
+        $this->ArrayMotos=$colMotos;
         $this->precioFinal=$precio;
     }
 
@@ -20,11 +20,11 @@ class Venta{
     public function getFecha(){
         return $this->fecha;
     }
-    public function getRefCliente(){
-        return $this->refCliente;
+    public function getObjCliente(){
+        return $this->objCliente;
     }
-    public function getRefArrayMotos(){
-        return $this->refArrayMotos;
+    public function getArrayMotos(){
+        return $this->ArrayMotos;
     }
     public function getPrecioFinal(){
         return $this->precioFinal;
@@ -36,22 +36,31 @@ class Venta{
     public function setFecha($nvaFecha){
         $this->fecha=$nvaFecha;
     }
-    public function setRefCliente($nvaRefCliente){
-        $this->refCliente=$nvaRefCliente;
+    public function setObjCliente($nvaObjCliente){
+        $this->objCliente=$nvaObjCliente;
     }
-    public function setRefArrayMotos($nvaRefArrayMotos){
-        $this->refArrayMotos=$nvaRefArrayMotos;
+    public function setArrayMotos($nvoArrayMotos){
+        $this->ArrayMotos=$nvoArrayMotos;
     }
     public function setPrecioFinal($nvoPrecioFinal){
         $this->precioFinal=$nvoPrecioFinal;
     }
 
     public function __toString(){
-        return "Venta n°: ". $this->getNumero(). " - Fecha: ". $this->getFecha(). " - Cliente: ". $this->getRefCliente(). " - Moto: ". $this->getRefArrayMotos(). " Precio final: $ ". $this->getPrecioFinal();
+        return "Venta n°: ". $this->getNumero(). " - Fecha: ". $this->getFecha(). " - Cliente: ". $this->getObjCliente(). " - Moto: ". $this->getArrayMotos(). " Precio final: $ ". $this->getPrecioFinal();
     }
 
     public function incorporarMoto($objMoto){
-        
+        if ($objMoto->getActiva()) {
+            $arregloMotos=$this->getArrayMotos();
+            array_push($arregloMotos, $objMoto);
+            $this->setArrayMotos($arregloMotos);
+            $this->setPrecioFinal($this->getPrecioFinal()+$objMoto->darPrecioVenta());
+            $respuesta=true;
+        } else {
+            $respuesta=false;
+        }
+        return $respuesta;
     }
 }
 ?>

@@ -47,23 +47,39 @@ class Empresa{
     }
 
     public function __toString(){
-        return "Empresa: ". $this->getDenominacion(). " - ". $this->getDireccion(). ;
+        return "Empresa: ". $this->getDenominacion(). " - ". $this->getDireccion();
     }
 
     public function retornarMoto($codigoMoto){
         $i=0;
         $bandera=false;
+        $respuesta=null;
         do {
             if ($this->getArrayMotos()[$i]->getCodigo()==$codigoMoto){
                 $bandera=true;
+                $respuesta=$this->getArrayMotos()[$i];
             }
             $i++;
         } while ($i<count($this->getArrayMotos()) && !$bandera);
-        return $respuesta;//que retorno? "retorna la referencia al objeto moto cuyo código coincide con el recibido por parámetro"
+        return $respuesta;//que retorno? "retorna la referencia al objeto moto cuyo código coincide con el recibido por parámetro" //el codigo de la moto?
     }
 
     public function registrarVenta($colCodigosMoto, $objCliente){
-        
+        $precioFinal=0;
+        if (!$objCliente->getEstadoBaja()) {
+            $objVenta=new Venta((count($this->getArrayVentas())+1), date("d/m/Y"), $objCliente, [], 0);
+            for ($i=0; $i<count($colCodigosMoto) ; $i++) {
+                $objMoto=$this->retornarMoto($colCodigosMoto[$i]);
+                if ($objMoto!=null) {
+                    $objVenta->incorporarMoto($objMoto);
+                }
+            }
+        $precioFinal=$objVenta->getPrecioFinal();
+        }
+        $arrayVentas=$this->getArrayVentas();
+        array_push($arrayVentas, $objVenta);
+        $this->setArrayVentas($arrayVentas);
+        return $precioFinal;
     }
 }
 ?>
